@@ -39,15 +39,13 @@ class ThemeProvider extends ChangeNotifier {
   }
   Future<void> loadThemeMode() async {
     final prefs = await SharedPreferences.getInstance();
-    final Brightness systemBrightness =
-        WidgetsBinding.instance.window.platformBrightness;
-    themeModeSwitch = prefs.getBool(StringConstant.themeModeSaved) ??
-        (systemBrightness == Brightness.dark);
-
+    final Brightness systemBrightness = WidgetsBinding.instance.window.platformBrightness;
+    themeModeSwitch = prefs.getBool(StringConstant.themeModeSaved) ?? (systemBrightness == Brightness.dark);
+    print("THEME_MODE $themeModeSwitch");
     final selectedColorValue = prefs.getInt('selectedTextColor');
-    final selectedColor = Color(selectedColorValue!);
-
-    themeData = themeModeSwitch ? darkMode : lightMode;
+    final selectedColor = Color(selectedColorValue??(themeModeSwitch?0xFFFFFFFF:0xFF21130d));
+    themeData = (themeModeSwitch==true) ? darkMode : lightMode;
+    notifyListeners();
     themeData = themeData.copyWith(
       focusColor: selectedColor,
       textTheme: themeData.textTheme.copyWith(
